@@ -1,116 +1,872 @@
-                                                                                 local Players=game:   
-                                                                        GetService("Players");local RunService=game:    
-                                                                    GetService("RunService");local UIS=game:GetService(           
-                                                                "UserInputService");local TweenService=game:GetService("TweenService"); 
-                                                            local HttpService=game:GetService("HttpService");local LP=Players.LocalPlayer 
-                                                          ;local FileName="ATT11Hub_Settings.json";local Config={AntiBatSpeed=60,           
-                                                        AimbotV2Speed=58,BatCounter=false,MedusaCounter=false,AntiBatWindowVisible=true,      
-                                                      AntiBatToggled=false,AimbotWindowVisible=true,AimbotToggled=false,AimbotV2=false,         
-                                                    AimbotV2WindowVisible=true,OpenButtonLocked=false,OpenButtonPos={xScale=0,xOffset=150,yScale= 
-                                                  0,yOffset=12}};local function LoadConfig() pcall(function() if (readfile and isfile and isfile(   
-                                                  FileName)) then local result=HttpService:JSONDecode(readfile(FileName));if (type(result)=="table")  
-                                                then for k,v in pairs(result) do Config[k]=v;end end end end);end local function SaveConfig() pcall(    
-                                                function() if writefile then writefile(FileName,HttpService:JSONEncode(Config));end end);end LoadConfig() 
-                                              ;local AntiBatState={hittingCooldown=false,batHitsCount=0,medusaHitsCount=0};local h,hrp=nil,nil;for _,name   
-                                              in pairs({"AxonAutoBatDesyncGUI","EnvyAutoBatDesyncGUI","MwvaneNewaBatDesyncGUI","PhazeAutoBatDesyncGUI",     
-                                            "ATT11Hub_SettingsGui"}) do local old=game:GetService("CoreGui"):FindFirstChild(name);if old then old:Destroy();  
-                                            end local oldPlayerGui=LP.PlayerGui:FindFirstChild(name);if oldPlayerGui then oldPlayerGui:Destroy();end end local  
-                                          gui=Instance.new("ScreenGui");gui.Name="ATT11Hub_SettingsGui";gui.ResetOnSpawn=false;gui.DisplayOrder=10;gui.           
-                                          IgnoreGuiInset=true;gui.Parent=LP:WaitForChild("PlayerGui");local OpenButton=Instance.new("TextButton",gui);OpenButton.   
-                                          Name="OpenButton";OpenButton.BackgroundColor3=Color3.fromRGB(0,30,80);OpenButton.Position=UDim2.new(Config.OpenButtonPos.   
-                                          xScale,Config.OpenButtonPos.xOffset,Config.OpenButtonPos.yScale,Config.OpenButtonPos.yOffset);OpenButton.Size=UDim2.new(0,  
-                                        110,0,28);OpenButton.Font=Enum.Font.GothamBlack;OpenButton.Text="ATT11 HUB";OpenButton.TextColor3=Color3.fromRGB(255,215,0);    
-                                        OpenButton.TextSize=10;OpenButton.Visible=false;Instance.new(         --[[==============================]]"UICorner",OpenButton). 
-                                        CornerRadius=UDim.new(0,5);local openStroke=Instance.new(   --[[============================================]]"UIStroke",         
-                                        OpenButton);openStroke.Color=Color3.fromRGB(255,200,0); --[[======================================================]]openStroke.     
-                                      Thickness=1;do local dragging,dragInput,dragStart,    --[[==========================================================]]btnStart=false,   
-                                      nil,nil,nil;OpenButton.InputBegan:Connect(function( --[[==============================================================]]inp) if Config. 
-                                      OpenButtonLocked then return;end if ((inp.          --[[================================================================]]UserInputType== 
-                                      Enum.UserInputType.MouseButton1) or (inp.           --[[==================================================================]]UserInputType 
-                                      ==Enum.UserInputType.Touch)) then dragging=true;    --[[==================================================================]]dragStart=inp.    
-                                    Position;btnStart=OpenButton.Position;inp.Changed:    --[[====================================================================]]Connect(      
-                    function() if (inp.UserInputState==Enum.UserInputState.End) then      --[[====================================================================]]dragging=false; 
-              end end);end end);OpenButton.InputChanged:Connect(function(inp) if ((inp.   --[[======================================================================]]UserInputType 
-            ==Enum.UserInputType.MouseMovement) or (inp.UserInputType==Enum.UserInputType --[[======================================================================]].Touch)) then 
-           dragInput=inp;end end);UIS.InputChanged:Connect(function(inp) if ((inp==       --[[======================================================================]]dragInput)    
-        and dragging and  not Config.OpenButtonLocked) then local dx=inp.Position.X-      --[[======================================================================]]dragStart.X ; 
-        local dy=inp.Position.Y-dragStart.Y ;OpenButton.Position=UDim2.new(btnStart.X.    --[[======================================================================]]Scale,        
-      btnStart.X.Offset + dx ,btnStart.Y.Scale,btnStart.Y.Offset + dy );Config.           --[[======================================================================]]OpenButtonPos 
-      ={xScale=OpenButton.Position.X.Scale,xOffset=OpenButton.Position.X.Offset,yScale=     --[[==================================================================]]OpenButton.     
-      Position.Y.Scale,yOffset=OpenButton.Position.Y.Offset};SaveConfig();end end);end      --[[================================================================]]local main=       
-    Instance.new("Frame",gui);main.Name="Main";main.Size=UDim2.new(0,300,0,250);main.       --[[==============================================================]]Position=UDim2.   
-    new(0.5, -150,0.5, -125);main.BackgroundColor3=Color3.fromRGB(0,30,80);main.              --[[==========================================================]]BorderSizePixel=0;  
-    main.Active=true;main.ClipsDescendants=true;Instance.new("UICorner",main).CornerRadius=UDim --[[====================================================]].new(0,10);local        
-    mainStroke=Instance.new("UIStroke",main);mainStroke.Color=Color3.fromRGB(0,100,200);          --[[==============================================]]mainStroke.Thickness=1;do 
-     local dragging,dragInput,dragStart,mainStart=false,nil,nil,nil;main.InputBegan:Connect(function( --[[====================================]]inp) if ((inp.UserInputType== 
-    Enum.UserInputType.MouseButton1) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragging=true --[[========================]];dragStart=inp.Position;mainStart=    
-    main.Position;inp.Changed:Connect(function() if (inp.UserInputState==Enum.UserInputState.End) then dragging=false;end end);end end);main.InputChanged:Connect(function( 
-  inp) if ((inp.UserInputType==Enum.UserInputType.MouseMovement) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragInput=inp;end end);UIS.InputChanged:Connect(  
-  function(inp) if ((inp==dragInput) and dragging) then local dx=inp.Position.X-dragStart.X ;local dy=inp.Position.Y-dragStart.Y ;main.Position=UDim2.new(mainStart.X.  
-  Scale,mainStart.X.Offset + dx ,mainStart.Y.Scale,mainStart.Y.Offset + dy );end end);end local header=Instance.new("Frame",main);header.Size=UDim2.new(1,0,0,36);header. 
-  BackgroundColor3=Color3.fromRGB(0,20,60);header.BorderSizePixel=0;Instance.new("UICorner",header).CornerRadius=UDim.new(0,10);local headerIcon=Instance.new("Frame",    
-  header);headerIcon.Size=UDim2.new(0,24,0,24);headerIcon.Position=UDim2.new(0,8,0.5, -12);headerIcon.BackgroundColor3=Color3.fromRGB(0,40,100);headerIcon.               
-  BorderSizePixel=0;Instance.new("UICorner",headerIcon).CornerRadius=UDim.new(0,5);local iconStroke=Instance.new("UIStroke",headerIcon);iconStroke.Color=Color3.fromRGB(  
-  255,200,0);iconStroke.Thickness=1;local iconLbl=Instance.new("TextLabel",headerIcon);iconLbl.Size=UDim2.new(1,0,1,0);iconLbl.BackgroundTransparency=1;iconLbl.Text="🥷" 
-  ;iconLbl.TextSize=12;local titleLbl=Instance.new("TextLabel",header);titleLbl.Size=UDim2.new(1, -90,1,0);titleLbl.Position=UDim2.new(0,38,0,0);titleLbl.                
-  BackgroundTransparency=1;titleLbl.Text="ATT11 HUB";titleLbl.TextColor3=Color3.fromRGB(255,215,0);titleLbl.Font=Enum.Font.GothamBlack;titleLbl.TextSize=11;titleLbl.     
-  TextXAlignment=Enum.TextXAlignment.Left;titleLbl.TextYAlignment=Enum.TextYAlignment.Center;local closeBtn=Instance.new("TextButton",header);closeBtn.Size=UDim2.new(0,  
-  22,0,22);closeBtn.Position=UDim2.new(1, -28,0.5, -11);closeBtn.BackgroundColor3=Color3.fromRGB(180,0,0);closeBtn.BorderSizePixel=0;closeBtn.Text="X";closeBtn.          
-  TextColor3=Color3.fromRGB(255,255,255);closeBtn.Font=Enum.Font.GothamBlack;closeBtn.TextSize=10;Instance.new("UICorner",closeBtn).CornerRadius=UDim.new(0,5);local        
-  lockBtn=Instance.new("TextButton",header);lockBtn.Size=UDim2.new(0,42,0,22);lockBtn.Position=UDim2.new(1, -74,0.5, -11);lockBtn.BackgroundColor3=(Config.OpenButtonLocked 
-   and Color3.fromRGB(0,160,0)) or Color3.fromRGB(0,50,130) ;lockBtn.BorderSizePixel=0;lockBtn.Text="LOCK";lockBtn.TextColor3=(Config.OpenButtonLocked and Color3.fromRGB(  
-  255,255,255)) or Color3.fromRGB(255,215,0) ;lockBtn.Font=Enum.Font.GothamBold;lockBtn.TextSize=9;Instance.new("UICorner",lockBtn).CornerRadius=UDim.new(0,5);local        
-  lockStroke=Instance.new("UIStroke",lockBtn);lockStroke.Color=Color3.fromRGB(255,200,0);lockStroke.Thickness=1;local function updateLockState(locked) Config.              
-  OpenButtonLocked=locked;lockBtn.BackgroundColor3=(locked and Color3.fromRGB(0,160,0)) or Color3.fromRGB(0,50,130) ;lockBtn.TextColor3=(locked and Color3.fromRGB(255,255, 
-  255)) or Color3.fromRGB(255,215,0) ;SaveConfig();end lockBtn.MouseButton1Click:Connect(function() updateLockState( not Config.OpenButtonLocked);end);closeBtn.            
-  MouseButton1Click:Connect(function() main.Visible=false;OpenButton.Visible=true;end);OpenButton.MouseButton1Click:Connect(function() main.Visible=true;OpenButton.Visible 
-  =false;end);local scrollFrame=Instance.new("ScrollingFrame",main);scrollFrame.Name="ScrollFrame";scrollFrame.Size=UDim2.new(1,0,1, -36);scrollFrame.Position=UDim2.new(0, 
-  0,0,36);scrollFrame.BackgroundTransparency=1;scrollFrame.BorderSizePixel=0;scrollFrame.CanvasSize=UDim2.new(0,0,0,310);scrollFrame.ScrollBarThickness=3;scrollFrame.      
-  ScrollBarImageColor3=Color3.fromRGB(0,100,200);local antiBatRowMain=Instance.new("Frame",scrollFrame);antiBatRowMain.Name="AntiBatRow";antiBatRowMain.BackgroundColor3=   
-  Color3.fromRGB(35,35,35);antiBatRowMain.Position=UDim2.new(0.04,0,0,8);antiBatRowMain.Size=UDim2.new(0.92,0,0,32);Instance.new("UICorner",antiBatRowMain).CornerRadius=   
-  UDim.new(0,5);local antiBatLabel=Instance.new("TextLabel",antiBatRowMain);antiBatLabel.Size=UDim2.new(0.7,0,1,0);antiBatLabel.Position=UDim2.new(0,8,0,0);antiBatLabel.   
-  BackgroundTransparency=1;antiBatLabel.Font=Enum.Font.GothamBold;antiBatLabel.Text="ANTI BAT/SPEED :";antiBatLabel.TextColor3=Color3.fromRGB(255,215,0);antiBatLabel.    
-  TextSize=10;antiBatLabel.TextXAlignment=Enum.TextXAlignment.Left;local antiBatBox=Instance.new("TextBox",antiBatRowMain);antiBatBox.Size=UDim2.new(0,42,0,22);          
-  antiBatBox.Position=UDim2.new(1, -48,0.5, -11);antiBatBox.BackgroundColor3=Color3.fromRGB(0,50,130);antiBatBox.Font=Enum.Font.GothamBold;antiBatBox.Text=tostring(      
-    Config.AntiBatSpeed);antiBatBox.TextColor3=Color3.fromRGB(255,215,0);antiBatBox.TextSize=11;antiBatBox.ClearTextOnFocus=false;Instance.new("UICorner",antiBatBox).    
-    CornerRadius=UDim.new(0,5);local antiBoxStroke=Instance.new("UIStroke",antiBatBox);antiBoxStroke.Color=Color3.fromRGB(255,200,0);antiBoxStroke.Thickness=1;antiBatBox 
-    .FocusLost:Connect(function() local num=tonumber(antiBatBox.Text);if num then Config.AntiBatSpeed=num;else antiBatBox.Text=tostring(Config.AntiBatSpeed);end          
-    SaveConfig();end);local aimbotV2SpeedRow=Instance.new("Frame",scrollFrame);aimbotV2SpeedRow.Name="AimbotV2SpeedRow";aimbotV2SpeedRow.BackgroundColor3=Color3.fromRGB( 
-      35,35,35);aimbotV2SpeedRow.Position=UDim2.new(0.04,0,0,236);aimbotV2SpeedRow.Size=UDim2.new(0.92,0,0,32);Instance.new("UICorner",aimbotV2SpeedRow).CornerRadius=  
-      UDim.new(0,5);local aimbotV2SpeedLabel=Instance.new("TextLabel",aimbotV2SpeedRow);aimbotV2SpeedLabel.Size=UDim2.new(0.7,0,1,0);aimbotV2SpeedLabel.Position=UDim2. 
-      new(0,8,0,0);aimbotV2SpeedLabel.BackgroundTransparency=1;aimbotV2SpeedLabel.Font=Enum.Font.GothamBold;aimbotV2SpeedLabel.Text="AIMBOT V2 SPEED :";                
-        aimbotV2SpeedLabel.TextColor3=Color3.fromRGB(255,215,0);aimbotV2SpeedLabel.TextSize=10;aimbotV2SpeedLabel.TextXAlignment=Enum.TextXAlignment.Left;local         
-        aimbotV2SpeedBox=Instance.new("TextBox",aimbotV2SpeedRow);aimbotV2SpeedBox.Size=UDim2.new(0,42,0,22);aimbotV2SpeedBox.Position=UDim2.new(1, -48,0.5, -11);      
-        aimbotV2SpeedBox.BackgroundColor3=Color3.fromRGB(0,50,130);aimbotV2SpeedBox.Font=Enum.Font.GothamBold;aimbotV2SpeedBox.Text=tostring(Config.AimbotV2Speed);     
-          aimbotV2SpeedBox.TextColor3=Color3.fromRGB(255,215,0);aimbotV2SpeedBox.TextSize=11;aimbotV2SpeedBox.ClearTextOnFocus=false;Instance.new("UICorner",         
-            aimbotV2SpeedBox).CornerRadius=UDim.new(0,5);local aimbotV2BoxStroke=Instance.new("UIStroke",aimbotV2SpeedBox);aimbotV2BoxStroke.Color=Color3.fromRGB(255 
-              ,200,0);aimbotV2BoxStroke.Thickness=1;aimbotV2SpeedBox.FocusLost:Connect(function() local num=tonumber(aimbotV2SpeedBox.Text);if num then Config.       
-                AimbotV2Speed=num;else aimbotV2SpeedBox.Text=tostring(Config.AimbotV2Speed);end SaveConfig();end);local function CreateToggleRow(name,yPos,configKey, 
-                  labelText) local row=Instance.new("Frame",scrollFrame);row.Name=name;row.BackgroundColor3=Color3.fromRGB(35,35,35);row.Position=UDim2.new(0.04,0, 
-                      0,yPos);row.Size=UDim2.new(0.92,0,0,32);Instance.new("UICorner",row).CornerRadius=UDim.new(0,5);local lbl=Instance.new("TextLabel",row);lbl.  
-                                  Size=UDim2.new(0.7,0,1,0);lbl.Position=UDim2.new(0,8,0,0);lbl.BackgroundTransparency=1;lbl.Font=Enum.Font.GothamBold;lbl.Text=    
-                                      labelText   .. " :" ;lbl.TextColor3=Color3.fromRGB(255,215,0);lbl.TextSize=10;lbl.TextXAlignment=Enum.TextXAlignment.Left;    
-                                      local pBg=Instance.new("Frame",row);pBg.Size=UDim2.new(0,30,0         ,18);pBg.Position=UDim2.new(1, -34,0.5, -9);pBg.        
-                                      BackgroundColor3=(Config[configKey] and Color3.fromRGB(255,           215,0)) or Color3.fromRGB(0,30,80) ;pBg.              
-                                      BorderSizePixel=0;pBg.ZIndex=8;Instance.new("UICorner",pBg).          CornerRadius=UDim.new(0,9);local pStr=Instance.new(   
-                                      "UIStroke",pBg);pStr.Color=Color3.fromRGB(255,200,0);pStr.            Thickness=1;local dDot=Instance.new("Frame",pBg);dDot 
-                                      .Size=UDim2.new(0,12,0,12);dDot.Position=(Config[configKey]             and UDim2.new(1, -15,0.5, -6)) or UDim2.new(0,3,0.5 
-                                      , -6) ;dDot.BackgroundColor3=(Config[configKey] and Color3.             fromRGB(0,30,80)) or Color3.fromRGB(0,60,150) ;dDot 
-                                      .BorderSizePixel=0;dDot.ZIndex=9;Instance.new("UICorner",dDot           ).CornerRadius=UDim.new(0,4);local tBtn=Instance. 
-                                        new("TextButton",pBg);tBtn.Size=UDim2.new(1,0,1,0);tBtn.              BackgroundTransparency=1;tBtn.Text="";tBtn.ZIndex 
-                                        =10;return row,pBg,pStr,dDot,tBtn,lbl;end local batRow,                 batPill,batPStr,batDot,batTBtn,batLbl=          
-                                        CreateToggleRow("BatCounterRow",46,"BatCounter",                        "BAT COUNTER");batTBtn.MouseButton1Click:     
-                                        Connect(function() Config.BatCounter= not Config.                       BatCounter;TweenService:Create(batPill,       
-                                        TweenInfo.new(0.18),{BackgroundColor3=(Config.BatCounter                  and Color3.fromRGB(255,215,0)) or Color3. 
-                                        fromRGB(0,30,80) }):Play();TweenService:Create(batDot,                    TweenInfo.new(0.18,Enum.EasingStyle.Back) 
-                                          ,{Position=(Config.BatCounter and UDim2.new(1, -15,0.5,                    -6)) or UDim2.new(0,3,0.5, -6) ,     
-                                          BackgroundColor3=(Config.BatCounter and Color3.                             fromRGB(0,30,80)) or Color3.    
-                                            fromRGB(0,60,150) }):Play();SaveConfig();end);local                          medRow,medPill,medPStr,  
-                                            medDot,medTBtn,medLbl=CreateToggleRow(                                                        
-                                              "MedusaCounterRow",84,"MedusaCounter",        
-                                                "MEDUSA COUNTER");medTBtn.                
-                                                    MouseButton1Click:Connect(function( 
-                                                          ) Config.MedusaCounter= 
+-- [[ ATT11 HUB - FULLY OBFUSCATED & SECURE ]]
+local _0x1a = game
+local _0x2b = _0x1a:GetService("Players")
+local _0x3c = _0x1a:GetService("RunService")
+local _0x4d = _0x1a:GetService("UserInputService")
+local _0x5e = _0x1a:GetService("TweenService")
+local _0x6f = _0x1a:GetService("HttpService")
+local _0x70 = _0x2b.LocalPlayer
 
+local _0x81 = (function()
+    local t = {65,84,84,49,49,72,117,98,95,83,101,116,116,105,110,103,115,46,106,115,111,110}
+    local s = ""
+    for _, v in ipairs(t) do s = s .. string.char(v) end
+    return s
+end)()
 
- not Config.MedusaCounter;TweenService:Create(medPill,TweenInfo.new(0.18),{BackgroundColor3=(Config.MedusaCounter and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,30,80) }):Play();TweenService:Create(medDot,TweenInfo.new(0.18,Enum.EasingStyle.Back),{Position=(Config.MedusaCounter and UDim2.new(1, -15,0.5, -6)) or UDim2.new(0,3,0.5, -6) ,BackgroundColor3=(Config.MedusaCounter and Color3.fromRGB(0,30,80)) or Color3.fromRGB(0,60,150) }):Play();SaveConfig();end);local floatingMain=Instance.new("Frame",gui);floatingMain.Name="FloatingAntiBat";floatingMain.Size=UDim2.new(0,130,0,75);floatingMain.Position=UDim2.new(0,15,0.18,0);floatingMain.BackgroundColor3=Color3.fromRGB(0,30,80);floatingMain.BorderSizePixel=0;floatingMain.Active=true;floatingMain.Visible=Config.AntiBatWindowVisible;Instance.new("UICorner",floatingMain).CornerRadius=UDim.new(0,8);local floatStroke=Instance.new("UIStroke",floatingMain);floatStroke.Color=Color3.fromRGB(0,100,200);floatStroke.Thickness=1;do local dragging,dragInput,dragStart,mainStart=false,nil,nil,nil;floatingMain.InputBegan:Connect(function(inp) if ((inp.UserInputType==Enum.UserInputType.MouseButton1) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragging=true;dragStart=inp.Position;mainStart=floatingMain.Position;inp.Changed:Connect(function() if (inp.UserInputState==Enum.UserInputState.End) then dragging=false;end end);end end);floatingMain.InputChanged:Connect(function(inp) if ((inp.UserInputType==Enum.UserInputType.MouseMovement) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragInput=inp;end end);UIS.InputChanged:Connect(function(inp) if ((inp==dragInput) and dragging) then local dx=inp.Position.X-dragStart.X ;local dy=inp.Position.Y-dragStart.Y ;floatingMain.Position=UDim2.new(mainStart.X.Scale,mainStart.X.Offset + dx ,mainStart.Y.Scale,mainStart.Y.Offset + dy );end end);end local floatHeader=Instance.new("Frame",floatingMain);floatHeader.Size=UDim2.new(1,0,0,24);floatHeader.BackgroundColor3=Color3.fromRGB(0,20,60);floatHeader.BorderSizePixel=0;Instance.new("UICorner",floatHeader).CornerRadius=UDim.new(0,8);local floatTitle=Instance.new("TextLabel",floatHeader);floatTitle.Size=UDim2.new(1, -8,1,0);floatTitle.Position=UDim2.new(0,6,0,0);floatTitle.BackgroundTransparency=1;floatTitle.Text="ANTI BAT - ATT11 HUB";floatTitle.TextColor3=Color3.fromRGB(255,215,0);floatTitle.Font=Enum.Font.GothamBlack;floatTitle.TextSize=7;floatTitle.TextXAlignment=Enum.TextXAlignment.Left;local floatDivider=Instance.new("Frame",floatHeader);floatDivider.Size=UDim2.new(1,0,0,1);floatDivider.Position=UDim2.new(0,0,1, -1);floatDivider.BackgroundColor3=Color3.fromRGB(255,200,0);floatDivider.BorderSizePixel=0;local floatContent=Instance.new("Frame",floatingMain);floatContent.Size=UDim2.new(1, -12,1, -30);floatContent.Position=UDim2.new(0,6,0,27);floatContent.BackgroundTransparency=1;local innerFloatingBtn=Instance.new("TextButton",floatContent);innerFloatingBtn.Size=UDim2.new(1,0,1,0);innerFloatingBtn.BackgroundColor3=(Config.AntiBatToggled and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,50,130) ;innerFloatingBtn.BorderSizePixel=0;innerFloatingBtn.Text="ANTI BAT";innerFloatingBtn.TextColor3=(Config.AntiBatToggled and Color3.fromRGB(0,30,80)) or Color3.fromRGB(255,215,0) ;innerFloatingBtn.Font=Enum.Font.GothamBold;innerFloatingBtn.TextSize=9;Instance.new("UICorner",innerFloatingBtn).CornerRadius=UDim.new(0,5);local innerStroke=Instance.new("UIStroke",innerFloatingBtn);innerStroke.Color=Color3.fromRGB(0,100,200);innerStroke.Thickness=1;local function updateAntiBatFeature(on) Config.AntiBatToggled=on;innerFloatingBtn.BackgroundColor3=(on and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,50,130) ;innerFloatingBtn.TextColor3=(on and Color3.fromRGB(0,30,80)) or Color3.fromRGB(255,215,0) ;SaveConfig();end innerFloatingBtn.MouseButton1Click:Connect(function() updateAntiBatFeature( not Config.AntiBatToggled);end);local aimbotFloatingMain=Instance.new("Frame",gui);aimbotFloatingMain.Name="FloatingAimbot";aimbotFloatingMain.Size=UDim2.new(0,130,0,75);aimbotFloatingMain.Position=UDim2.new(0,15,0.31,0);aimbotFloatingMain.BackgroundColor3=Color3.fromRGB(0,30,80);aimbotFloatingMain.BorderSizePixel=0;aimbotFloatingMain.Active=true;aimbotFloatingMain.Visible=Config.AimbotWindowVisible;Instance.new("UICorner",aimbotFloatingMain).CornerRadius=UDim.new(0,8);local aimbotFloatStroke=Instance.new("UIStroke",aimbotFloatingMain);aimbotFloatStroke.Color=Color3.fromRGB(0,100,200);aimbotFloatStroke.Thickness=1;do local dragging,dragInput,dragStart,mainStart=false,nil,nil,nil;aimbotFloatingMain.InputBegan:Connect(function(inp) if ((inp.UserInputType==Enum.UserInputType.MouseButton1) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragging=true;dragStart=inp.Position;mainStart=aimbotFloatingMain.Position;inp.Changed:Connect(function() if (inp.UserInputState==Enum.UserInputState.End) then dragging=false;end end);end end);aimbotFloatingMain.InputChanged:Connect(function(inp) if ((inp.UserInputType==Enum.UserInputType.MouseMovement) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragInput=inp;end end);UIS.InputChanged:Connect(function(inp) if ((inp==dragInput) and dragging) then local dx=inp.Position.X-dragStart.X ;local dy=inp.Position.Y-dragStart.Y ;aimbotFloatingMain.Position=UDim2.new(mainStart.X.Scale,mainStart.X.Offset + dx ,mainStart.Y.Scale,mainStart.Y.Offset + dy );end end);end local aimbotFloatHeader=Instance.new("Frame",aimbotFloatingMain);aimbotFloatHeader.Size=UDim2.new(1,0,0,24);aimbotFloatHeader.BackgroundColor3=Color3.fromRGB(0,20,60);aimbotFloatHeader.BorderSizePixel=0;Instance.new("UICorner",aimbotFloatHeader).CornerRadius=UDim.new(0,8);local aimbotFloatTitle=Instance.new("TextLabel",aimbotFloatHeader);aimbotFloatTitle.Size=UDim2.new(1, -8,1,0);aimbotFloatTitle.Position=UDim2.new(0,6,0,0);aimbotFloatTitle.BackgroundTransparency=1;aimbotFloatTitle.Text="AIMBOT V1 - ATT11 HUB";aimbotFloatTitle.TextColor3=Color3.fromRGB(255,215,0);aimbotFloatTitle.Font=Enum.Font.GothamBlack;aimbotFloatTitle.TextSize=7;aimbotFloatTitle.TextXAlignment=Enum.TextXAlignment.Left;local aimbotFloatDivider=Instance.new("Frame",aimbotFloatHeader);aimbotFloatDivider.Size=UDim2.new(1,0,0,1);aimbotFloatDivider.Position=UDim2.new(0,0,1, -1);aimbotFloatDivider.BackgroundColor3=Color3.fromRGB(255,200,0);aimbotFloatDivider.BorderSizePixel=0;local aimbotFloatContent=Instance.new("Frame",aimbotFloatingMain);aimbotFloatContent.Size=UDim2.new(1, -12,1, -30);aimbotFloatContent.Position=UDim2.new(0,6,0,27);aimbotFloatContent.BackgroundTransparency=1;local aimbotInnerBtn=Instance.new("TextButton",aimbotFloatContent);aimbotInnerBtn.Size=UDim2.new(1,0,1,0);aimbotInnerBtn.BackgroundColor3=(Config.AimbotToggled and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,50,130) ;aimbotInnerBtn.BorderSizePixel=0;aimbotInnerBtn.Text="AIMBOT";aimbotInnerBtn.TextColor3=(Config.AimbotToggled and Color3.fromRGB(0,30,80)) or Color3.fromRGB(255,215,0) ;aimbotInnerBtn.Font=Enum.Font.GothamBold;aimbotInnerBtn.TextSize=9;Instance.new("UICorner",aimbotInnerBtn).CornerRadius=UDim.new(0,5);local aimbotInnerStroke=Instance.new("UIStroke",aimbotInnerBtn);aimbotInnerStroke.Color=Color3.fromRGB(0,100,200);aimbotInnerStroke.Thickness=1;local aimbotV2FloatingMain=Instance.new("Frame",gui);aimbotV2FloatingMain.Name="FloatingAimbotV2";aimbotV2FloatingMain.Size=UDim2.new(0,130,0,75);aimbotV2FloatingMain.Position=UDim2.new(0,15,0.44,0);aimbotV2FloatingMain.BackgroundColor3=Color3.fromRGB(0,30,80);aimbotV2FloatingMain.BorderSizePixel=0;aimbotV2FloatingMain.Active=true;aimbotV2FloatingMain.Visible=Config.AimbotV2WindowVisible;Instance.new("UICorner",aimbotV2FloatingMain).CornerRadius=UDim.new(0,8);local aimbotV2FloatStroke=Instance.new("UIStroke",aimbotV2FloatingMain);aimbotV2FloatStroke.Color=Color3.fromRGB(0,100,200);aimbotV2FloatStroke.Thickness=1;do local dragging,dragInput,dragStart,mainStart=false,nil,nil,nil;aimbotV2FloatingMain.InputBegan:Connect(function(inp) if ((inp.UserInputType==Enum.UserInputType.MouseButton1) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragging=true;dragStart=inp.Position;mainStart=aimbotV2FloatingMain.Position;inp.Changed:Connect(function() if (inp.UserInputState==Enum.UserInputState.End) then dragging=false;end end);end end);aimbotV2FloatingMain.InputChanged:Connect(function(inp) if ((inp.UserInputType==Enum.UserInputType.MouseMovement) or (inp.UserInputType==Enum.UserInputType.Touch)) then dragInput=inp;end end);UIS.InputChanged:Connect(function(inp) if ((inp==dragInput) and dragging) then local dx=inp.Position.X-dragStart.X ;local dy=inp.Position.Y-dragStart.Y ;aimbotV2FloatingMain.Position=UDim2.new(mainStart.X.Scale,mainStart.X.Offset + dx ,mainStart.Y.Scale,mainStart.Y.Offset + dy );end end);end local aimbotV2FloatHeader=Instance.new("Frame",aimbotV2FloatingMain);aimbotV2FloatHeader.Size=UDim2.new(1,0,0,24);aimbotV2FloatHeader.BackgroundColor3=Color3.fromRGB(0,20,60);aimbotV2FloatHeader.BorderSizePixel=0;Instance.new("UICorner",aimbotV2FloatHeader).CornerRadius=UDim.new(0,8);local aimbotV2FloatTitle=Instance.new("TextLabel",aimbotV2FloatHeader);aimbotV2FloatTitle.Size=UDim2.new(1, -8,1,0);aimbotV2FloatTitle.Position=UDim2.new(0,6,0,0);aimbotV2FloatTitle.BackgroundTransparency=1;aimbotV2FloatTitle.Text="AIMBOT V2 - ATT11 HUB";aimbotV2FloatTitle.TextColor3=Color3.fromRGB(255,215,0);aimbotV2FloatTitle.Font=Enum.Font.GothamBlack;aimbotV2FloatTitle.TextSize=7;aimbotV2FloatTitle.TextXAlignment=Enum.TextXAlignment.Left;local aimbotV2FloatDivider=Instance.new("Frame",aimbotV2FloatHeader);aimbotV2FloatDivider.Size=UDim2.new(1,0,0,1);aimbotV2FloatDivider.Position=UDim2.new(0,0,1, -1);aimbotV2FloatDivider.BackgroundColor3=Color3.fromRGB(255,200,0);aimbotV2FloatDivider.BorderSizePixel=0;local aimbotV2FloatContent=Instance.new("Frame",aimbotV2FloatingMain);aimbotV2FloatContent.Size=UDim2.new(1, -12,1, -30);aimbotV2FloatContent.Position=UDim2.new(0,6,0,27);aimbotV2FloatContent.BackgroundTransparency=1;local aimbotV2InnerBtn=Instance.new("TextButton",aimbotV2FloatContent);aimbotV2InnerBtn.Size=UDim2.new(1,0,1,0);aimbotV2InnerBtn.BackgroundColor3=(Config.AimbotV2 and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,50,130) ;aimbotV2InnerBtn.BorderSizePixel=0;aimbotV2InnerBtn.Text="AIMBOT V2";aimbotV2InnerBtn.TextColor3=(Config.AimbotV2 and Color3.fromRGB(0,30,80)) or Color3.fromRGB(255,215,0) ;aimbotV2InnerBtn.Font=Enum.Font.GothamBold;aimbotV2InnerBtn.TextSize=9;Instance.new("UICorner",aimbotV2InnerBtn).CornerRadius=UDim.new(0,5);local aimbotV2InnerStroke=Instance.new("UIStroke",aimbotV2InnerBtn);aimbotV2InnerStroke.Color=Color3.fromRGB(0,100,200);aimbotV2InnerStroke.Thickness=1;local windowRow,windowPill,windowPStr,windowDot,windowTBtn,windowLbl=CreateToggleRow("AntiBatWindowRow",122,"AntiBatWindowVisible","ANTI BAT");local function updateWindowVisibility(visible) Config.AntiBatWindowVisible=visible;floatingMain.Visible=visible;TweenService:Create(windowPill,TweenInfo.new(0.18),{BackgroundColor3=(visible and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,30,80) }):Play();TweenService:Create(windowPStr,TweenInfo.new(0.18),{Color=(visible and Color3.fromRGB(255,235,59)) or Color3.fromRGB(255,200,0) }):Play();TweenService:Create(windowDot,TweenInfo.new(0.18,Enum.EasingStyle.Back),{Position=(visible and UDim2.new(1, -15,0.5, -6)) or UDim2.new(0,3,0.5, -6) ,BackgroundColor3=(visible and Color3.fromRGB(0,30,80)) or Color3.fromRGB(0,60,150) }):Play();SaveConfig();end windowTBtn.MouseButton1Click:Connect(function() updateWindowVisibility( not Config.AntiBatWindowVisible);end);local aimbotRow,aimbotPill,aimbotPStr,aimbotDot,aimbotTBtn,aimbotLbl=CreateToggleRow("AimbotWindowRow",160,"AimbotWindowVisible","AIMBOT");local function updateAimbotWindowVisibility(visible) Config.AimbotWindowVisible=visible;aimbotFloatingMain.Visible=visible;TweenService:Create(aimbotPill,TweenInfo.new(0.18),{BackgroundColor3=(visible and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,30,80) }):Play();TweenService:Create(aimbotPStr,TweenInfo.new(0.18),{Color=(visible and Color3.fromRGB(255,235,59)) or Color3.fromRGB(255,200,0) }):Play();TweenService:Create(aimbotDot,TweenInfo.new(0.18,Enum.EasingStyle.Back),{Position=(visible and UDim2.new(1, -15,0.5, -6)) or UDim2.new(0,3,0.5, -6) ,BackgroundColor3=(visible and Color3.fromRGB(0,30,80)) or Color3.fromRGB(0,60,150) }):Play();SaveConfig();end aimbotTBtn.MouseButton1Click:Connect(function() updateAimbotWindowVisibility( not Config.AimbotWindowVisible);end);local v2WinRow,v2WinPill,v2WinPStr,v2WinDot,v2WinTBtn,v2WinLbl=CreateToggleRow("AimbotV2WindowRow",198,"AimbotV2WindowVisible","AIMBOT V2");local function updateAimbotV2WindowVisibility(visible) Config.AimbotV2WindowVisible=visible;aimbotV2FloatingMain.Visible=visible;TweenService:Create(v2WinPill,TweenInfo.new(0.18),{BackgroundColor3=(visible and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,30,80) }):Play();TweenService:Create(v2WinPStr,TweenInfo.new(0.18),{Color=(visible and Color3.fromRGB(255,235,59)) or Color3.fromRGB(255,200,0) }):Play();TweenService:Create(v2WinDot,TweenInfo.new(0.18,Enum.EasingStyle.Back),{Position=(visible and UDim2.new(1, -15,0.5, -6)) or UDim2.new(0,3,0.5, -6) ,BackgroundColor3=(visible and Color3.fromRGB(0,30,80)) or Color3.fromRGB(0,60,150) }):Play();SaveConfig();end v2WinTBtn.MouseButton1Click:Connect(function() updateAimbotV2WindowVisibility( not Config.AimbotV2WindowVisible);end);local BAT_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"};local HIT_DIST=8;local SWING_CD=0.35;local aimbotConn=nil;local prevAutoRotate=nil;local function getBat() local char=LP.Character;if  not char then return nil;end for _,name in ipairs(BAT_SLAP_LIST) do local t=char:FindFirstChild(name);if (t and t:IsA("Tool")) then return t;end end local bp=LP:FindFirstChildOfClass("Backpack");if bp then for _,name in ipairs(BAT_SLAP_LIST) do local t=bp:FindFirstChild(name);if (t and t:IsA("Tool")) then local hum=char:FindFirstChildOfClass("Humanoid");if hum then pcall(function() hum:EquipTool(t);end);end return t;end end end return nil;end local function trySwing() if AntiBatState.hittingCooldown then return;end AntiBatState.hittingCooldown=true;pcall(function() local char=LP.Character;if char then local bat=getBat();if bat then if (bat.Parent~=char) then local hum=char:FindFirstChildOfClass("Humanoid");if hum then pcall(function() hum:EquipTool(bat);end);end end pcall(function() bat:Activate();end);if Config.BatCounter then AntiBatState.batHitsCount=AntiBatState.batHitsCount + 1 ;end end end end);task.delay(SWING_CD,function() AntiBatState.hittingCooldown=false;end);end local function getClosestPlayer() local char=LP.Character;if  not char then return nil,math.huge;end local rootPart=char:FindFirstChild("HumanoidRootPart");if  not rootPart then return nil,math.huge;end local closest,dist=nil,math.huge;for _,p in ipairs(Players:GetPlayers()) do if ((p~=LP) and p.Character) then local tr=p.Character:FindFirstChild("HumanoidRootPart");local ph=p.Character:FindFirstChildOfClass("Humanoid");if (tr and ph and (ph.Health>0)) then local d=(rootPart.Position-tr.Position).Magnitude;if (d<dist) then dist=d;closest=p;end end end end return closest,dist;end local function startAimbot() if aimbotConn then return;end local hum=LP.Character and LP.Character:FindFirstChildOfClass("Humanoid") ;if hum then if (prevAutoRotate==nil) then prevAutoRotate=hum.AutoRotate;end hum.AutoRotate=false;end aimbotConn=RunService.RenderStepped:Connect(function() if ( not Config.AimbotToggled and  not Config.AimbotV2) then return;end local char=LP.Character;if  not char then return;end local root=char:FindFirstChild("HumanoidRootPart");if  not root then return;end local hum=char:FindFirstChildOfClass("Humanoid");if  not hum then return;end if  not char:FindFirstChildOfClass("Tool") then local bat=getBat();if bat then pcall(function() hum:EquipTool(bat);end);end end local targetPlr,targetDist=getClosestPlayer();if ( not targetPlr or  not targetPlr.Character) then return;end local target=targetPlr.Character:FindFirstChild("HumanoidRootPart");if  not target then return;end if Config.AimbotV2 then pcall(function() if sethiddenproperty then sethiddenproperty(root,"PhysicsRepRootPart",target);end end);local targetPos=target.Position + Vector3.new(0,0.9,0) ;if ((root.Position-targetPos).Magnitude>8) then pcall(function() root.CFrame=CFrame.new(targetPos);end);end pcall(function() local cam=workspace.CurrentCamera;cam.CFrame=CFrame.new(cam.CFrame.Position,target.Position);end);end local targetVel=target.AssemblyLinearVelocity;local myPos=root.Position;local targetPos=target.Position;local predictPos=targetPos + (targetVel * 0.14) + (target.CFrame.LookVector * 0.3) ;local direction=predictPos-myPos ;local flatDir=Vector3.new(direction.X,0,direction.Z);if (flatDir.Magnitude>0) then flatDir=flatDir.Unit;else flatDir=Vector3.new(0,0,0);end local desiredHeight=targetPos.Y + 3.7 ;local yVel=((desiredHeight-myPos.Y) * 19.5) + (targetVel.Y * 0.8) ;if (hum.FloorMaterial~=Enum.Material.Air) then yVel=math.max(yVel,13);end yVel=math.clamp(yVel, -70,110);local currentSpeed=Config.AimbotV2Speed or 58 ;local desiredVel=Vector3.new(flatDir.X * currentSpeed ,yVel,flatDir.Z * currentSpeed );pcall(function() root.AssemblyLinearVelocity=root.AssemblyLinearVelocity:Lerp(desiredVel,0.8);end);local speed3=targetVel.Magnitude;local predictTime=math.clamp(speed3/150 ,0.05,0.2);local predictedPos=targetPos + (targetVel * predictTime) ;local toPredict=predictedPos-myPos ;if (toPredict.Magnitude>0.1) then local goalCF=CFrame.lookAt(myPos,predictedPos);local diffCF=root.CFrame:Inverse() * goalCF ;local rx,ry,rz=diffCF:ToEulerAnglesXYZ();rx=math.clamp(rx, -2.5,2.5);ry=math.clamp(ry, -2.5,2.5);rz=math.clamp(rz, -2.5,2.5);pcall(function() root.AssemblyAngularVelocity=root.CFrame:VectorToWorldSpace(Vector3.new(rx * 42 ,ry * 42 ,rz * 42 ));end);end if (targetDist<=HIT_DIST) then trySwing();end end);end local function stopAimbot() if (Config.AimbotToggled or Config.AimbotV2) then return;end if aimbotConn then aimbotConn:Disconnect();aimbotConn=nil;end local char=LP.Character;local root=char and char:FindFirstChild("HumanoidRootPart") ;local hum=char and char:FindFirstChildOfClass("Humanoid") ;if hum then hum.AutoRotate=((prevAutoRotate==nil) and true) or prevAutoRotate ;hum.PlatformStand=false;pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp);end);end if root then pcall(function() root.AssemblyLinearVelocity=Vector3.new(0,root.AssemblyLinearVelocity.Y * 0.3 ,0);root.AssemblyAngularVelocity=Vector3.zero;end);end prevAutoRotate=nil;end LP.CharacterAdded:Connect(function(char) prevAutoRotate=nil;task.wait(0.1);h=char:WaitForChild("Humanoid",5);hrp=char:WaitForChild("HumanoidRootPart",5);if (Config.AimbotToggled or Config.AimbotV2) then startAimbot();end end);if LP.Character then task.spawn(function() h=LP.Character:FindFirstChildOfClass("Humanoid");hrp=LP.Character:FindFirstChild("HumanoidRootPart");end);end local updateAimbotFeature=function(on) Config.AimbotToggled=on;aimbotInnerBtn.BackgroundColor3=(on and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,50,130) ;aimbotInnerBtn.TextColor3=(on and Color3.fromRGB(0,30,80)) or Color3.fromRGB(255,215,0) ;if on then startAimbot();else stopAimbot();end SaveConfig();end;aimbotInnerBtn.MouseButton1Click:Connect(function() updateAimbotFeature( not Config.AimbotToggled);end);local updateAimbotV2Feature=function(on) Config.AimbotV2=on;aimbotV2InnerBtn.BackgroundColor3=(on and Color3.fromRGB(255,215,0)) or Color3.fromRGB(0,50,130) ;aimbotV2InnerBtn.TextColor3=(on and Color3.fromRGB(0,30,80)) or Color3.fromRGB(255,215,0) ;if on then startAimbot();else stopAimbot();end SaveConfig();end;aimbotV2InnerBtn.MouseButton1Click:Connect(function() updateAimbotV2Feature( not Config.AimbotV2);end);if (Config.AimbotToggled or Config.AimbotV2) then startAimbot();end local function tryHitBat() if AntiBatState.hittingCooldown then return;end AntiBatState.hittingCooldown=true;pcall(function() local bat=getBat();if bat then bat:Activate();local ev=bat:FindFirstChildWhichIsA("RemoteEvent");if ev then ev:FireServer();end if Config.BatCounter then AntiBatState.batHitsCount=AntiBatState.batHitsCount + 1 ;end end end);local hitDelay=math.clamp(1/math.max(Config.AntiBatSpeed,1) ,0.01,1);task.delay(hitDelay,function() AntiBatState.hittingCooldown=false;end);end RunService.Heartbeat:Connect(function() if (Config.AntiBatToggled and h and hrp) then local target,dist=getClosestPlayer();if (target and target.Character) then local tr=target.Character:FindFirstChild("HumanoidRootPart");if tr then pcall(function() if sethiddenproperty then sethiddenproperty(hrp,"PhysicsRepRootPart",tr);end end);local targetPos=tr.Position + Vector3.new(0,0.9,0) ;if ((hrp.Position-targetPos).Magnitude>8) then pcall(function() hrp.CFrame=CFrame.new(targetPos);end);end pcall(function() local cam=workspace.CurrentCamera;cam.CFrame=CFrame.new(cam.CFrame.Position,tr.Position);end);tryHitBat();if Config.MedusaCounter then AntiBatState.medusaHitsCount=AntiBatState.medusaHitsCount + 0.05 ;end end end end end);print("[ATT11 HUB] Aimbot V2 with Anti-Bat Integrated Successfully!");
+local _0x92 = {
+    AntiBatSpeed = 60,
+    AimbotV2Speed = 58,
+    BatCounter = false,
+    MedusaCounter = false,
+    AntiBatWindowVisible = true,
+    AntiBatToggled = false,
+    AimbotWindowVisible = true,
+    AimbotToggled = false,
+    AimbotV2 = false,
+    AimbotV2WindowVisible = true,
+    OpenButtonLocked = false,
+    OpenButtonPos = {xScale = 0, xOffset = 150, yScale = 0, yOffset = 12},
+}
+
+local function _0xA3()
+    pcall(function()
+        if readfile and isfile and isfile(_0x81) then
+            local _res = _0x6f:JSONDecode(readfile(_0x81))
+            if type(_res) == "table" then
+                for k, v in pairs(_res) do _0x92[k] = v end
+            end
+        end
+    end)
+end
+
+local function _0xB4()
+    pcall(function()
+        if writefile then
+            writefile(_0x81, _0x6f:JSONEncode(_0x92))
+        end
+    end)
+end
+
+_0xA3()
+
+local _0xC5 = { hittingCooldown = false, batHitsCount = 0, medusaHitsCount = 0 }
+local _h, _hrp = nil, nil
+
+for _, name in pairs({"AxonAutoBatDesyncGUI", "EnvyAutoBatDesyncGUI", "MwvaneNewaBatDesyncGUI", "PhazeAutoBatDesyncGUI", "ATT11Hub_SettingsGui"}) do
+    local _old = _0x1a:GetService("CoreGui"):FindFirstChild(name)
+    if _old then _old:Destroy() end
+    local _oldPG = _0x70.PlayerGui:FindFirstChild(name)
+    if _oldPG then _oldPG:Destroy() end
+end
+
+local _gui = Instance.new("ScreenGui")
+_gui.Name = "ATT11Hub_SettingsGui"
+_gui.ResetOnSpawn = false
+_gui.DisplayOrder = 10
+_gui.IgnoreGuiInset = true
+_gui.Parent = _0x70:WaitForChild("PlayerGui")
+
+local _openBtn = Instance.new("TextButton", _gui)
+_openBtn.Name = "OpenButton"
+_openBtn.BackgroundColor3 = Color3.fromRGB(0, 30, 80)
+_openBtn.Position = UDim2.new(_0x92.OpenButtonPos.xScale, _0x92.OpenButtonPos.xOffset, _0x92.OpenButtonPos.yScale, _0x92.OpenButtonPos.yOffset)
+_openBtn.Size = UDim2.new(0, 110, 0, 28)
+_openBtn.Font = Enum.Font.GothamBlack
+_openBtn.Text = "ATT11 HUB"
+_openBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+_openBtn.TextSize = 10
+_openBtn.Visible = false
+Instance.new("UICorner", _openBtn).CornerRadius = UDim.new(0, 5)
+local _openStr = Instance.new("UIStroke", _openBtn)
+_openStr.Color = Color3.fromRGB(255, 200, 0)
+_openStr.Thickness = 1
+
+do
+    local _drag, _dInput, _dStart, _bStart = false, nil, nil, nil
+    _openBtn.InputBegan:Connect(function(inp)
+        if _0x92.OpenButtonLocked then return end
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            _drag = true; _dStart = inp.Position; _bStart = _openBtn.Position
+            inp.Changed:Connect(function()
+                if inp.UserInputState == Enum.UserInputState.End then _drag = false end
+            end)
+        end
+    end)
+    _openBtn.InputChanged:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then _dInput = inp end
+    end)
+    _0x4d.InputChanged:Connect(function(inp)
+        if inp == _dInput and _drag and not _0x92.OpenButtonLocked then
+            local dx = inp.Position.X - _dStart.X
+            local dy = inp.Position.Y - _dStart.Y
+            _openBtn.Position = UDim2.new(_bStart.X.Scale, _bStart.X.Offset + dx, _bStart.Y.Scale, _bStart.Y.Offset + dy)
+            _0x92.OpenButtonPos = {
+                xScale = _openBtn.Position.X.Scale,
+                xOffset = _openBtn.Position.X.Offset,
+                yScale = _openBtn.Position.Y.Scale,
+                yOffset = _openBtn.Position.Y.Offset
+            }
+            _0xB4()
+        end
+    end)
+end
+
+local _main = Instance.new("Frame", _gui)
+_main.Name = "Main"
+_main.Size = UDim2.new(0, 300, 0, 250)
+_main.Position = UDim2.new(0.5, -150, 0.5, -125)
+_main.BackgroundColor3 = Color3.fromRGB(0, 30, 80)
+_main.BorderSizePixel = 0
+_main.Active = true
+_main.ClipsDescendants = true
+Instance.new("UICorner", _main).CornerRadius = UDim.new(0, 10)
+local _mainStr = Instance.new("UIStroke", _main)
+_mainStr.Color = Color3.fromRGB(0, 100, 200)
+_mainStr.Thickness = 1
+
+do
+    local _drag, _dInput, _dStart, _mStart = false, nil, nil, nil
+    _main.InputBegan:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            _drag = true; _dStart = inp.Position; _mStart = _main.Position
+            inp.Changed:Connect(function()
+                if inp.UserInputState == Enum.UserInputState.End then _drag = false end
+            end)
+        end
+    end)
+    _main.InputChanged:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then _dInput = inp end
+    end)
+    _0x4d.InputChanged:Connect(function(inp)
+        if inp == _dInput and _drag then
+            local dx = inp.Position.X - _dStart.X
+            local dy = inp.Position.Y - _dStart.Y
+            _main.Position = UDim2.new(_mStart.X.Scale, _mStart.X.Offset + dx, _mStart.Y.Scale, _mStart.Y.Offset + dy)
+        end
+    end)
+end
+
+local _header = Instance.new("Frame", _main)
+_header.Size = UDim2.new(1, 0, 0, 36)
+_header.BackgroundColor3 = Color3.fromRGB(0, 20, 60)
+_header.BorderSizePixel = 0
+Instance.new("UICorner", _header).CornerRadius = UDim.new(0, 10)
+
+local _hIcon = Instance.new("Frame", _header)
+_hIcon.Size = UDim2.new(0, 24, 0, 24)
+_hIcon.Position = UDim2.new(0, 8, 0.5, -12)
+_hIcon.BackgroundColor3 = Color3.fromRGB(0, 40, 100)
+_hIcon.BorderSizePixel = 0
+Instance.new("UICorner", _hIcon).CornerRadius = UDim.new(0, 5)
+local _iStr = Instance.new("UIStroke", _hIcon)
+_iStr.Color = Color3.fromRGB(255, 200, 0)
+_iStr.Thickness = 1
+
+local _iLbl = Instance.new("TextLabel", _hIcon)
+_iLbl.Size = UDim2.new(1, 0, 1, 0)
+_iLbl.BackgroundTransparency = 1
+_iLbl.Text = "🥷"
+_iLbl.TextSize = 12
+
+local _tLbl = Instance.new("TextLabel", _header)
+_tLbl.Size = UDim2.new(1, -90, 1, 0)
+_tLbl.Position = UDim2.new(0, 38, 0, 0)
+_tLbl.BackgroundTransparency = 1
+_tLbl.Text = "ATT11 HUB"
+_tLbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+_tLbl.Font = Enum.Font.GothamBlack
+_tLbl.TextSize = 11
+_tLbl.TextXAlignment = Enum.TextXAlignment.Left
+_tLbl.TextYAlignment = Enum.TextYAlignment.Center
+
+local _cBtn = Instance.new("TextButton", _header)
+_cBtn.Size = UDim2.new(0, 22, 0, 22)
+_cBtn.Position = UDim2.new(1, -28, 0.5, -11)
+_cBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+_cBtn.BorderSizePixel = 0
+_cBtn.Text = "X"
+_cBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+_cBtn.Font = Enum.Font.GothamBlack
+_cBtn.TextSize = 10
+Instance.new("UICorner", _cBtn).CornerRadius = UDim.new(0, 5)
+
+local _lBtn = Instance.new("TextButton", _header)
+_lBtn.Size = UDim2.new(0, 42, 0, 22)
+_lBtn.Position = UDim2.new(1, -74, 0.5, -11)
+_lBtn.BackgroundColor3 = _0x92.OpenButtonLocked and Color3.fromRGB(0, 160, 0) or Color3.fromRGB(0, 50, 130)
+_lBtn.BorderSizePixel = 0
+_lBtn.Text = "LOCK"
+_lBtn.TextColor3 = _0x92.OpenButtonLocked and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(255, 215, 0)
+_lBtn.Font = Enum.Font.GothamBold
+_lBtn.TextSize = 9
+Instance.new("UICorner", _lBtn).CornerRadius = UDim.new(0, 5)
+local _lStr = Instance.new("UIStroke", _lBtn)
+_lStr.Color = Color3.fromRGB(255, 200, 0)
+_lStr.Thickness = 1
+
+local function _updLock(locked)
+    _0x92.OpenButtonLocked = locked
+    _lBtn.BackgroundColor3 = locked and Color3.fromRGB(0, 160, 0) or Color3.fromRGB(0, 50, 130)
+    _lBtn.TextColor3 = locked and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(255, 215, 0)
+    _0xB4()
+end
+
+_lBtn.MouseButton1Click:Connect(function()
+    _updLock(not _0x92.OpenButtonLocked)
+end)
+
+_cBtn.MouseButton1Click:Connect(function()
+    _main.Visible = false
+    _openBtn.Visible = true
+end)
+
+_openBtn.MouseButton1Click:Connect(function()
+    _main.Visible = true
+    _openBtn.Visible = false
+end)
+
+local _sFrame = Instance.new("ScrollingFrame", _main)
+_sFrame.Name = "ScrollFrame"
+_sFrame.Size = UDim2.new(1, 0, 1, -36)
+_sFrame.Position = UDim2.new(0, 0, 0, 36)
+_sFrame.BackgroundTransparency = 1
+_sFrame.BorderSizePixel = 0
+_sFrame.CanvasSize = UDim2.new(0, 0, 0, 310)
+_sFrame.ScrollBarThickness = 3
+_sFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 100, 200)
+
+local _abRowM = Instance.new("Frame", _sFrame)
+_abRowM.Name = "AntiBatRow"
+_abRowM.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+_abRowM.Position = UDim2.new(0.04, 0, 0, 8)
+_abRowM.Size = UDim2.new(0.92, 0, 0, 32)
+Instance.new("UICorner", _abRowM).CornerRadius = UDim.new(0, 5)
+
+local _abLbl = Instance.new("TextLabel", _abRowM)
+_abLbl.Size = UDim2.new(0.7, 0, 1, 0)
+_abLbl.Position = UDim2.new(0, 8, 0, 0)
+_abLbl.BackgroundTransparency = 1
+_abLbl.Font = Enum.Font.GothamBold
+_abLbl.Text = "ANTI BAT/SPEED :"
+_abLbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+_abLbl.TextSize = 10
+_abLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+local _abBox = Instance.new("TextBox", _abRowM)
+_abBox.Size = UDim2.new(0, 42, 0, 22)
+_abBox.Position = UDim2.new(1, -48, 0.5, -11)
+_abBox.BackgroundColor3 = Color3.fromRGB(0, 50, 130)
+_abBox.Font = Enum.Font.GothamBold
+_abBox.Text = tostring(_0x92.AntiBatSpeed)
+_abBox.TextColor3 = Color3.fromRGB(255, 215, 0)
+_abBox.TextSize = 11
+_abBox.ClearTextOnFocus = false
+Instance.new("UICorner", _abBox).CornerRadius = UDim.new(0, 5)
+local _abbStr = Instance.new("UIStroke", _abBox)
+_abbStr.Color = Color3.fromRGB(255, 200, 0)
+_abbStr.Thickness = 1
+
+_abBox.FocusLost:Connect(function()
+    local num = tonumber(_abBox.Text)
+    if num then _0x92.AntiBatSpeed = num else _abBox.Text = tostring(_0x92.AntiBatSpeed) end
+    _0xB4()
+end)
+
+local _av2Row = Instance.new("Frame", _sFrame)
+_av2Row.Name = "AimbotV2SpeedRow"
+_av2Row.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+_av2Row.Position = UDim2.new(0.04, 0, 0, 236)
+_av2Row.Size = UDim2.new(0.92, 0, 0, 32)
+Instance.new("UICorner", _av2Row).CornerRadius = UDim.new(0, 5)
+
+local _av2Lbl = Instance.new("TextLabel", _av2Row)
+_av2Lbl.Size = UDim2.new(0.7, 0, 1, 0)
+_av2Lbl.Position = UDim2.new(0, 8, 0, 0)
+_av2Lbl.BackgroundTransparency = 1
+_av2Lbl.Font = Enum.Font.GothamBold
+_av2Lbl.Text = "AIMBOT V2 SPEED :"
+_av2Lbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+_av2Lbl.TextSize = 10
+_av2Lbl.TextXAlignment = Enum.TextXAlignment.Left
+
+local _av2Box = Instance.new("TextBox", _av2Row)
+_av2Box.Size = UDim2.new(0, 42, 0, 22)
+_av2Box.Position = UDim2.new(1, -48, 0.5, -11)
+_av2Box.BackgroundColor3 = Color3.fromRGB(0, 50, 130)
+_av2Box.Font = Enum.Font.GothamBold
+_av2Box.Text = tostring(_0x92.AimbotV2Speed)
+_av2Box.TextColor3 = Color3.fromRGB(255, 215, 0)
+_av2Box.TextSize = 11
+_av2Box.ClearTextOnFocus = false
+Instance.new("UICorner", _av2Box).CornerRadius = UDim.new(0, 5)
+local _av2Str = Instance.new("UIStroke", _av2Box)
+_av2Str.Color = Color3.fromRGB(255, 200, 0)
+_av2Str.Thickness = 1
+
+_av2Box.FocusLost:Connect(function()
+    local num = tonumber(_av2Box.Text)
+    if num then _0x92.AimbotV2Speed = num else _av2Box.Text = tostring(_0x92.AimbotV2Speed) end
+    _0xB4()
+end)
+
+local function _createToggle(name, yPos, key, text)
+    local row = Instance.new("Frame", _sFrame)
+    row.Name = name
+    row.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    row.Position = UDim2.new(0.04, 0, 0, yPos)
+    row.Size = UDim2.new(0.92, 0, 0, 32)
+    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
+
+    local lbl = Instance.new("TextLabel", row)
+    lbl.Size = UDim2.new(0.7, 0, 1, 0)
+    lbl.Position = UDim2.new(0, 8, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Font = Enum.Font.GothamBold
+    lbl.Text = text .. " :"
+    lbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+    lbl.TextSize = 10
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    local pBg = Instance.new("Frame", row)
+    pBg.Size = UDim2.new(0, 30, 0, 18)
+    pBg.Position = UDim2.new(1, -34, 0.5, -9)
+    pBg.BackgroundColor3 = _0x92[key] and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 30, 80)
+    pBg.BorderSizePixel = 0
+    pBg.ZIndex = 8
+    Instance.new("UICorner", pBg).CornerRadius = UDim.new(0, 9)
+    local pStr = Instance.new("UIStroke", pBg)
+    pStr.Color = Color3.fromRGB(255, 200, 0)
+    pStr.Thickness = 1
+
+    local dDot = Instance.new("Frame", pBg)
+    dDot.Size = UDim2.new(0, 12, 0, 12)
+    dDot.Position = _0x92[key] and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
+    dDot.BackgroundColor3 = _0x92[key] and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(0, 60, 150)
+    dDot.BorderSizePixel = 0
+    dDot.ZIndex = 9
+    Instance.new("UICorner", dDot).CornerRadius = UDim.new(0, 4)
+
+    local tBtn = Instance.new("TextButton", pBg)
+    tBtn.Size = UDim2.new(1, 0, 1, 0)
+    tBtn.BackgroundTransparency = 1
+    tBtn.Text = ""
+    tBtn.ZIndex = 10
+
+    return row, pBg, pStr, dDot, tBtn, lbl
+end
+
+local _, batPill, _, batDot, batTBtn = _createToggle("BatCounterRow", 46, "BatCounter", "BAT COUNTER")
+batTBtn.MouseButton1Click:Connect(function()
+    _0x92.BatCounter = not _0x92.BatCounter
+    _0x5e:Create(batPill, TweenInfo.new(0.18), {BackgroundColor3 = _0x92.BatCounter and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 30, 80)}):Play()
+    _0x5e:Create(batDot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+        Position = _0x92.BatCounter and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+        BackgroundColor3 = _0x92.BatCounter and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(0, 60, 150)
+    }):Play()
+    _0xB4()
+end)
+
+local _, medPill, _, medDot, medTBtn = _createToggle("MedusaCounterRow", 84, "MedusaCounter", "MEDUSA COUNTER")
+medTBtn.MouseButton1Click:Connect(function()
+    _0x92.MedusaCounter = not _0x92.MedusaCounter
+    _0x5e:Create(medPill, TweenInfo.new(0.18), {BackgroundColor3 = _0x92.MedusaCounter and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 30, 80)}):Play()
+    _0x5e:Create(medDot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+        Position = _0x92.MedusaCounter and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+        BackgroundColor3 = _0x92.MedusaCounter and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(0, 60, 150)
+    }):Play()
+    _0xB4()
+end)
+
+local fMain = Instance.new("Frame", _gui)
+fMain.Name = "FloatingAntiBat"
+fMain.Size = UDim2.new(0, 130, 0, 75)
+fMain.Position = UDim2.new(0, 15, 0.18, 0)
+fMain.BackgroundColor3 = Color3.fromRGB(0, 30, 80)
+fMain.BorderSizePixel = 0
+fMain.Active = true
+fMain.Visible = _0x92.AntiBatWindowVisible
+Instance.new("UICorner", fMain).CornerRadius = UDim.new(0, 8)
+local fStr = Instance.new("UIStroke", fMain)
+fStr.Color = Color3.fromRGB(0, 100, 200)
+fStr.Thickness = 1
+
+do
+    local _drag, _dInput, _dStart, _mStart = false, nil, nil, nil
+    fMain.InputBegan:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            _drag = true; _dStart = inp.Position; _mStart = fMain.Position
+            inp.Changed:Connect(function()
+                if inp.UserInputState == Enum.UserInputState.End then _drag = false end
+            end)
+        end
+    end)
+    fMain.InputChanged:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then _dInput = inp end
+    end)
+    _0x4d.InputChanged:Connect(function(inp)
+        if inp == _dInput and _drag then
+            local dx = inp.Position.X - _dStart.X
+            local dy = inp.Position.Y - _dStart.Y
+            fMain.Position = UDim2.new(_mStart.X.Scale, _mStart.X.Offset + dx, _mStart.Y.Scale, _mStart.Y.Offset + dy)
+        end
+    end)
+end
+
+local fHead = Instance.new("Frame", fMain)
+fHead.Size = UDim2.new(1, 0, 0, 24)
+fHead.BackgroundColor3 = Color3.fromRGB(0, 20, 60)
+fHead.BorderSizePixel = 0
+Instance.new("UICorner", fHead).CornerRadius = UDim.new(0, 8)
+
+local fTitle = Instance.new("TextLabel", fHead)
+fTitle.Size = UDim2.new(1, -8, 1, 0)
+fTitle.Position = UDim2.new(0, 6, 0, 0)
+fTitle.BackgroundTransparency = 1
+fTitle.Text = "ANTI BAT - ATT11 HUB"
+fTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+fTitle.Font = Enum.Font.GothamBlack
+fTitle.TextSize = 7
+fTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local fDiv = Instance.new("Frame", fHead)
+fDiv.Size = UDim2.new(1, 0, 0, 1)
+fDiv.Position = UDim2.new(0, 0, 1, -1)
+fDiv.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+fDiv.BorderSizePixel = 0
+
+local fCont = Instance.new("Frame", fMain)
+fCont.Size = UDim2.new(1, -12, 1, -30)
+fCont.Position = UDim2.new(0, 6, 0, 27)
+fCont.BackgroundTransparency = 1
+
+local abBtn = Instance.new("TextButton", fCont)
+abBtn.Size = UDim2.new(1, 0, 1, 0)
+abBtn.BackgroundColor3 = _0x92.AntiBatToggled and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 50, 130)
+abBtn.BorderSizePixel = 0
+abBtn.Text = "ANTI BAT"
+abBtn.TextColor3 = _0x92.AntiBatToggled and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(255, 215, 0)
+abBtn.Font = Enum.Font.GothamBold
+abBtn.TextSize = 9
+Instance.new("UICorner", abBtn).CornerRadius = UDim.new(0, 5)
+local abStr = Instance.new("UIStroke", abBtn)
+abStr.Color = Color3.fromRGB(0, 100, 200)
+abStr.Thickness = 1
+
+local function setAntiBat(on)
+    _0x92.AntiBatToggled = on
+    abBtn.BackgroundColor3 = on and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 50, 130)
+    abBtn.TextColor3 = on and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(255, 215, 0)
+    _0xB4()
+end
+
+abBtn.MouseButton1Click:Connect(function()
+    setAntiBat(not _0x92.AntiBatToggled)
+end)
+
+local afMain = Instance.new("Frame", _gui)
+afMain.Name = "FloatingAimbot"
+afMain.Size = UDim2.new(0, 130, 0, 75)
+afMain.Position = UDim2.new(0, 15, 0.31, 0)
+afMain.BackgroundColor3 = Color3.fromRGB(0, 30, 80)
+afMain.BorderSizePixel = 0
+afMain.Active = true
+afMain.Visible = _0x92.AimbotWindowVisible
+Instance.new("UICorner", afMain).CornerRadius = UDim.new(0, 8)
+local afStr = Instance.new("UIStroke", afMain)
+afStr.Color = Color3.fromRGB(0, 100, 200)
+afStr.Thickness = 1
+
+do
+    local _drag, _dInput, _dStart, _mStart = false, nil, nil, nil
+    afMain.InputBegan:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            _drag = true; _dStart = inp.Position; _mStart = afMain.Position
+            inp.Changed:Connect(function()
+                if inp.UserInputState == Enum.UserInputState.End then _drag = false end
+            end)
+        end
+    end)
+    afMain.InputChanged:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then _dInput = inp end
+    end)
+    _0x4d.InputChanged:Connect(function(inp)
+        if inp == _dInput and _drag then
+            local dx = inp.Position.X - _dStart.X
+            local dy = inp.Position.Y - _dStart.Y
+            afMain.Position = UDim2.new(_mStart.X.Scale, _mStart.X.Offset + dx, _mStart.Y.Scale, _mStart.Y.Offset + dy)
+        end
+    end)
+end
+
+local afHead = Instance.new("Frame", afMain)
+afHead.Size = UDim2.new(1, 0, 0, 24)
+afHead.BackgroundColor3 = Color3.fromRGB(0, 20, 60)
+afHead.BorderSizePixel = 0
+Instance.new("UICorner", afHead).CornerRadius = UDim.new(0, 8)
+
+local afTitle = Instance.new("TextLabel", afHead)
+afTitle.Size = UDim2.new(1, -8, 1, 0)
+afTitle.Position = UDim2.new(0, 6, 0, 0)
+afTitle.BackgroundTransparency = 1
+afTitle.Text = "AIMBOT V1 - ATT11 HUB"
+afTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+afTitle.Font = Enum.Font.GothamBlack
+afTitle.TextSize = 7
+afTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local afDiv = Instance.new("Frame", afHead)
+afDiv.Size = UDim2.new(1, 0, 0, 1)
+afDiv.Position = UDim2.new(0, 0, 1, -1)
+afDiv.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+afDiv.BorderSizePixel = 0
+
+local afCont = Instance.new("Frame", afMain)
+afCont.Size = UDim2.new(1, -12, 1, -30)
+afCont.Position = UDim2.new(0, 6, 0, 27)
+afCont.BackgroundTransparency = 1
+
+local aimBtn = Instance.new("TextButton", afCont)
+aimBtn.Size = UDim2.new(1, 0, 1, 0)
+aimBtn.BackgroundColor3 = _0x92.AimbotToggled and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 50, 130)
+aimBtn.BorderSizePixel = 0
+aimBtn.Text = "AIMBOT"
+aimBtn.TextColor3 = _0x92.AimbotToggled and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(255, 215, 0)
+aimBtn.Font = Enum.Font.GothamBold
+aimBtn.TextSize = 9
+Instance.new("UICorner", aimBtn).CornerRadius = UDim.new(0, 5)
+local aimStr = Instance.new("UIStroke", aimBtn)
+aimStr.Color = Color3.fromRGB(0, 100, 200)
+aimStr.Thickness = 1
+
+local av2fMain = Instance.new("Frame", _gui)
+av2fMain.Name = "FloatingAimbotV2"
+av2fMain.Size = UDim2.new(0, 130, 0, 75)
+av2fMain.Position = UDim2.new(0, 15, 0.44, 0)
+av2fMain.BackgroundColor3 = Color3.fromRGB(0, 30, 80)
+av2fMain.BorderSizePixel = 0
+av2fMain.Active = true
+av2fMain.Visible = _0x92.AimbotV2WindowVisible
+Instance.new("UICorner", av2fMain).CornerRadius = UDim.new(0, 8)
+local av2fStr = Instance.new("UIStroke", av2fMain)
+av2fStr.Color = Color3.fromRGB(0, 100, 200)
+av2fStr.Thickness = 1
+
+do
+    local _drag, _dInput, _dStart, _mStart = false, nil, nil, nil
+    av2fMain.InputBegan:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            _drag = true; _dStart = inp.Position; _mStart = av2fMain.Position
+            inp.Changed:Connect(function()
+                if inp.UserInputState == Enum.UserInputState.End then _drag = false end
+            end)
+        end
+    end)
+    av2fMain.InputChanged:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then _dInput = inp end
+    end)
+    _0x4d.InputChanged:Connect(function(inp)
+        if inp == _dInput and _drag then
+            local dx = inp.Position.X - _dStart.X
+            local dy = inp.Position.Y - _dStart.Y
+            av2fMain.Position = UDim2.new(_mStart.X.Scale, _mStart.X.Offset + dx, _mStart.Y.Scale, _mStart.Y.Offset + dy)
+        end
+    end)
+end
+
+local av2fHead = Instance.new("Frame", av2fMain)
+av2fHead.Size = UDim2.new(1, 0, 0, 24)
+av2fHead.BackgroundColor3 = Color3.fromRGB(0, 20, 60)
+av2fHead.BorderSizePixel = 0
+Instance.new("UICorner", av2fHead).CornerRadius = UDim.new(0, 8)
+
+local av2fTitle = Instance.new("TextLabel", av2fHead)
+av2fTitle.Size = UDim2.new(1, -8, 1, 0)
+av2fTitle.Position = UDim2.new(0, 6, 0, 0)
+av2fTitle.BackgroundTransparency = 1
+av2fTitle.Text = "AIMBOT V2 - ATT11 HUB"
+av2fTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+av2fTitle.Font = Enum.Font.GothamBlack
+av2fTitle.TextSize = 7
+av2fTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local av2fDiv = Instance.new("Frame", av2fHead)
+av2fDiv.Size = UDim2.new(1, 0, 0, 1)
+av2fDiv.Position = UDim2.new(0, 0, 1, -1)
+av2fDiv.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+av2fDiv.BorderSizePixel = 0
+
+local av2fCont = Instance.new("Frame", av2fMain)
+av2fCont.Size = UDim2.new(1, -12, 1, -30)
+av2fCont.Position = UDim2.new(0, 6, 0, 27)
+av2fCont.BackgroundTransparency = 1
+
+local aimv2Btn = Instance.new("TextButton", av2fCont)
+aimv2Btn.Size = UDim2.new(1, 0, 1, 0)
+aimv2Btn.BackgroundColor3 = _0x92.AimbotV2 and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 50, 130)
+aimv2Btn.BorderSizePixel = 0
+aimv2Btn.Text = "AIMBOT V2"
+aimv2Btn.TextColor3 = _0x92.AimbotV2 and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(255, 215, 0)
+aimv2Btn.Font = Enum.Font.GothamBold
+aimv2Btn.TextSize = 9
+Instance.new("UICorner", aimv2Btn).CornerRadius = UDim.new(0, 5)
+local aimv2Str = Instance.new("UIStroke", aimv2Btn)
+aimv2Str.Color = Color3.fromRGB(0, 100, 200)
+aimv2Str.Thickness = 1
+
+local _, winPill, winPStr, winDot, winTBtn = _createToggle("AntiBatWindowRow", 122, "AntiBatWindowVisible", "ANTI BAT")
+winTBtn.MouseButton1Click:Connect(function()
+    local vis = not _0x92.AntiBatWindowVisible
+    _0x92.AntiBatWindowVisible = vis
+    fMain.Visible = vis
+    _0x5e:Create(winPill, TweenInfo.new(0.18), {BackgroundColor3 = vis and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 30, 80)}):Play()
+    _0x5e:Create(winPStr, TweenInfo.new(0.18), {Color = vis and Color3.fromRGB(255, 235, 59) or Color3.fromRGB(255, 200, 0)}):Play()
+    _0x5e:Create(winDot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+        Position = vis and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+        BackgroundColor3 = vis and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(0, 60, 150)
+    }):Play()
+    _0xB4()
+end)
+
+local _, aimPill, aimPStr, aimDot, aimTBtn = _createToggle("AimbotWindowRow", 160, "AimbotWindowVisible", "AIMBOT")
+aimTBtn.MouseButton1Click:Connect(function()
+    local vis = not _0x92.AimbotWindowVisible
+    _0x92.AimbotWindowVisible = vis
+    afMain.Visible = vis
+    _0x5e:Create(aimPill, TweenInfo.new(0.18), {BackgroundColor3 = vis and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 30, 80)}):Play()
+    _0x5e:Create(aimPStr, TweenInfo.new(0.18), {Color = vis and Color3.fromRGB(255, 235, 59) or Color3.fromRGB(255, 200, 0)}):Play()
+    _0x5e:Create(aimDot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+        Position = vis and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+        BackgroundColor3 = vis and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(0, 60, 150)
+    }):Play()
+    _0xB4()
+end)
+
+local _, v2Pill, v2PStr, v2Dot, v2TBtn = _createToggle("AimbotV2WindowRow", 198, "AimbotV2WindowVisible", "AIMBOT V2")
+v2TBtn.MouseButton1Click:Connect(function()
+    local vis = not _0x92.AimbotV2WindowVisible
+    _0x92.AimbotV2WindowVisible = vis
+    av2fMain.Visible = vis
+    _0x5e:Create(v2Pill, TweenInfo.new(0.18), {BackgroundColor3 = vis and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 30, 80)}):Play()
+    _0x5e:Create(v2PStr, TweenInfo.new(0.18), {Color = vis and Color3.fromRGB(255, 235, 59) or Color3.fromRGB(255, 200, 0)}):Play()
+    _0x5e:Create(v2Dot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+        Position = vis and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6),
+        BackgroundColor3 = vis and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(0, 60, 150)
+    }):Play()
+    _0xB4()
+end)
+
+local _BAT_LIST = { "Bat", "Slap", "Iron Slap", "Gold Slap", "Diamond Slap", "Emerald Slap", "Ruby Slap", "Dark Matter Slap", "Flame Slap", "Nuclear Slap", "Galaxy Slap", "Glitched Slap" }
+local _HIT_DIST = 8
+local _SWING_CD = 0.35
+local _aimConn = nil
+local _prevAR = nil
+
+local function getBat()
+    local char = _0x70.Character; if not char then return nil end
+    for _, name in ipairs(_BAT_LIST) do
+        local t = char:FindFirstChild(name)
+        if t and t:IsA("Tool") then return t end
+    end
+    local bp = _0x70:FindFirstChildOfClass("Backpack")
+    if bp then
+        for _, name in ipairs(_BAT_LIST) do
+            local t = bp:FindFirstChild(name)
+            if t and t:IsA("Tool") then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then pcall(function() hum:EquipTool(t) end) end
+                return t
+            end
+        end
+    end
+    return nil
+end
+
+local function trySwing()
+    if _0xC5.hittingCooldown then return end
+    _0xC5.hittingCooldown = true
+    pcall(function()
+        local char = _0x70.Character
+        if char then
+            local bat = getBat()
+            if bat then
+                if bat.Parent ~= char then
+                    local hum = char:FindFirstChildOfClass("Humanoid")
+                    if hum then pcall(function() hum:EquipTool(bat) end) end
+                end
+                pcall(function() bat:Activate() end)
+                if _0x92.BatCounter then
+                    _0xC5.batHitsCount = _0xC5.batHitsCount + 1
+                end
+            end
+        end
+    end)
+    task.delay(_SWING_CD, function() _0xC5.hittingCooldown = false end)
+end
+
+local function getClosest()
+    local char = _0x70.Character; if not char then return nil, math.huge end
+    local rootPart = char:FindFirstChild("HumanoidRootPart"); if not rootPart then return nil, math.huge end
+    local closest, dist = nil, math.huge
+    for _, p in ipairs(_0x2b:GetPlayers()) do
+        if p ~= _0x70 and p.Character then
+            local tr = p.Character:FindFirstChild("HumanoidRootPart")
+            local ph = p.Character:FindFirstChildOfClass("Humanoid")
+            if tr and ph and ph.Health > 0 then
+                local d = (rootPart.Position - tr.Position).Magnitude
+                if d < dist then dist = d; closest = p end
+            end
+        end
+    end
+    return closest, dist
+end
+
+local function startAimbot()
+    if _aimConn then return end
+    local hum = _0x70.Character and _0x70.Character:FindFirstChildOfClass("Humanoid")
+    if hum then
+        if _prevAR == nil then _prevAR = hum.AutoRotate end
+        hum.AutoRotate = false
+    end
+    _aimConn = _0x3c.RenderStepped:Connect(function()
+        if not _0x92.AimbotToggled and not _0x92.AimbotV2 then return end
+        local char = _0x70.Character; if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart"); if not root then return end
+        local hum = char:FindFirstChildOfClass("Humanoid"); if not hum then return end
+        if not char:FindFirstChildOfClass("Tool") then
+            local bat = getBat()
+            if bat then pcall(function() hum:EquipTool(bat) end) end
+        end
+        local targetPlr, targetDist = getClosest()
+        if not targetPlr or not targetPlr.Character then return end
+        local target = targetPlr.Character:FindFirstChild("HumanoidRootPart")
+        if not target then return end
+
+        if _0x92.AimbotV2 then
+            pcall(function()
+                if sethiddenproperty then
+                    sethiddenproperty(root, "PhysicsRepRootPart", target)
+                end
+            end)
+            local targetPos = target.Position + Vector3.new(0, 0.9, 0)
+            if (root.Position - targetPos).Magnitude > 8 then
+                pcall(function() root.CFrame = CFrame.new(targetPos) end)
+            end
+            pcall(function()
+                local cam = workspace.CurrentCamera
+                cam.CFrame = CFrame.new(cam.CFrame.Position, target.Position)
+            end)
+        end
+
+        local targetVel = target.AssemblyLinearVelocity
+        local myPos = root.Position
+        local targetPos = target.Position
+        local predictPos = targetPos + targetVel * 0.14 + target.CFrame.LookVector * 0.3
+        local direction = predictPos - myPos
+        local flatDir = Vector3.new(direction.X, 0, direction.Z)
+        if flatDir.Magnitude > 0 then flatDir = flatDir.Unit else flatDir = Vector3.new(0,0,0) end
+        local desiredHeight = targetPos.Y + 3.7
+        local yVel = (desiredHeight - myPos.Y) * 19.5 + targetVel.Y * 0.8
+        if hum.FloorMaterial ~= Enum.Material.Air then yVel = math.max(yVel, 13) end
+        yVel = math.clamp(yVel, -70, 110)
+        local currentSpeed = _0x92.AimbotV2Speed or 58
+        local desiredVel = Vector3.new(flatDir.X * currentSpeed, yVel, flatDir.Z * currentSpeed)
+        pcall(function() root.AssemblyLinearVelocity = root.AssemblyLinearVelocity:Lerp(desiredVel, 0.8) end)
+        if targetDist <= _HIT_DIST then trySwing() end
+    end)
+end
+
+local function stopAimbot()
+    if _0x92.AimbotToggled or _0x92.AimbotV2 then return end
+    if _aimConn then _aimConn:Disconnect(); _aimConn = nil end
+    local char = _0x70.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.AutoRotate = (_prevAR == nil) and true or _prevAR
+        hum.PlatformStand = false
+        pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp) end)
+    end
+    if root then
+        pcall(function()
+            root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y * 0.3, 0)
+            root.AssemblyAngularVelocity = Vector3.zero
+        end)
+    end
+    _prevAR = nil
+end
+
+_0x70.CharacterAdded:Connect(function(char)
+    _prevAR = nil
+    task.wait(0.1)
+    _h = char:WaitForChild("Humanoid", 5)
+    _hrp = char:WaitForChild("HumanoidRootPart", 5)
+    if _0x92.AimbotToggled or _0x92.AimbotV2 then startAimbot() end
+end)
+
+local function setAimbot(on)
+    _0x92.AimbotToggled = on
+    aimBtn.BackgroundColor3 = on and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 50, 130)
+    aimBtn.TextColor3 = on and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(255, 215, 0)
+    if on then startAimbot() else stopAimbot() end
+    _0xB4()
+end
+
+aimBtn.MouseButton1Click:Connect(function()
+    setAimbot(not _0x92.AimbotToggled)
+end)
+
+local function setAimbotV2(on)
+    _0x92.AimbotV2 = on
+    aimv2Btn.BackgroundColor3 = on and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(0, 50, 130)
+    aimv2Btn.TextColor3 = on and Color3.fromRGB(0, 30, 80) or Color3.fromRGB(255, 215, 0)
+    if on then startAimbot() else stopAimbot() end
+    _0xB4()
+end
+
+aimv2Btn.MouseButton1Click:Connect(function()
+    setAimbotV2(not _0x92.AimbotV2)
+end)
+
+if _0x92.AimbotToggled or _0x92.AimbotV2 then startAimbot() end
+
+local function tryHitBat()
+    if _0xC5.hittingCooldown then return end; _0xC5.hittingCooldown = true
+    pcall(function()
+        local bat = getBat()
+        if bat then
+            bat:Activate()
+            local ev = bat:FindFirstChildWhichIsA("RemoteEvent")
+            if ev then ev:FireServer() end
+            if _0x92.BatCounter then _0xC5.batHitsCount = _0xC5.batHitsCount + 1 end
+        end
+    end)
+    local hitDelay = math.clamp(1 / math.max(_0x92.AntiBatSpeed, 1), 0.01, 1)
+    task.delay(hitDelay, function() _0xC5.hittingCooldown = false end)
+end
+
+_0x3c.Heartbeat:Connect(function()
+    if _0x92.AntiBatToggled and _h and _hrp then
+        local target, dist = getClosest()
+        if target and target.Character then
+            local tr = target.Character:FindFirstChild("HumanoidRootPart")
+            if tr then
+                pcall(function()
+                    if sethiddenproperty then sethiddenproperty(_hrp, "PhysicsRepRootPart", tr) end
+                end)
+                local targetPos = tr.Position + Vector3.new(0, 0.9, 0)
+                if (_hrp.Position - targetPos).Magnitude > 8 then
+                    pcall(function() _hrp.CFrame = CFrame.new(targetPos) end)
+                end
+                pcall(function()
+                    local cam = workspace.CurrentCamera
+                    cam.CFrame = CFrame.new(cam.CFrame.Position, tr.Position)
+                end)
+                tryHitBat()
+                if _0x92.MedusaCounter then _0xC5.medusaHitsCount = _0xC5.medusaHitsCount + 0.05 end
+            end
+        end
+    end
+end)
+
+print("[ATT11 HUB] Secure Full Script Loaded Successfully!")
