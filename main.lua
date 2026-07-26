@@ -1,4 +1,5 @@
--- [[ ATT11 HUB - FULLY OBFUSCATED & SECURE ]]
+if game.Players.LocalPlayer.Name ~= "ATT11559" then game.Players.LocalPlayer:Kick("مغلق") return end
+ -- [[ ATT11 HUB - FULLY OBFUSCATED & SECURE ]]
 local _0x1a = game
 local _0x2b = _0x1a:GetService("Players")
 local _0x3c = _0x1a:GetService("RunService")
